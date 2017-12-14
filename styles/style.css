@@ -29,6 +29,7 @@ html, body {
 	border: solid 2px white; 
 }
 #swatches {
+	pointer-events: none;
 	position: fixed;
 	bottom:8px;
 	left:0;

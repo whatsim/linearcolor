@@ -15,8 +15,8 @@ function clickToImageCoord(e,img){
 	let r = img.getClientRects()[0]
 	let x = ((e.clientX - r.left) / r.width) * img.naturalWidth
 	let y = ((e.clientY - r.top) / r.height) * img.naturalHeight
-	x = Math.floor(x)
-	y = Math.floor(y)
+	x = Math.floor(x) + window.scrollX
+	y = Math.floor(y) + window.scrollY
 	return { x,y }
 }
 
@@ -32,7 +32,9 @@ sampleImage.addEventListener('mousedown',function(e){
 })
 sampleImage.addEventListener('mouseup',function(e){
 	sampleLine.end = clickToImageCoord(e,sampleImage)
-	doSample(5)
+	let dist = Math.sqrt(Math.pow(sampleLine.start.x - sampleLine.end.x,2) + Math.pow(sampleLine.start.y - sampleLine.end.y,2))
+	let sampleSize = Math.ceil(dist/100)
+	doSample(sampleSize)
 })
 
 sampleImage.addEventListener('load',function(e){
@@ -43,6 +45,7 @@ sampleImage.addEventListener('load',function(e){
 })
 
 sampleImage.addEventListener('drop',function(e){
+	clearUI()
 	if(e.dataTransfer && e.dataTransfer.files[0]){
 		let reader = new FileReader,
 			file = e.dataTransfer.files[0],
@@ -82,27 +85,41 @@ function pick(x,y) {
 }
 
 function doSample(numSamples){
-	sampleLocations.innerHTML = ""
-	swatches.innerHTML = ""
-	for(let i = 0; i < numSamples + 1; i++){
-		let sampleX = lerp(i/numSamples, sampleLine.start.x, sampleLine.end.x)
-		let sampleY = lerp(i/numSamples, sampleLine.start.y, sampleLine.end.y)
-		let markerPos = imageCoordToDocCoord(sampleX,sampleY,sampleImage)
-		let color = pick(sampleX, sampleY)
-		
-		var marker = document.createElement('div')
-		marker.classList.add('marker')
-		marker.style.left = `${markerPos.x - 5}px`
-		marker.style.top = `${markerPos.y - 15}px`
-		marker.style.background = color
-		sampleLocations.appendChild(marker)
+	clearUI()
+	if(numSamples != 0){
+		for(let i = 0; i < numSamples + 1; i++){
+			let sampleX = lerp(i/numSamples, sampleLine.start.x, sampleLine.end.x)
+			let sampleY = lerp(i/numSamples, sampleLine.start.y, sampleLine.end.y)
+			let markerPos = imageCoordToDocCoord(sampleX,sampleY,sampleImage)
+			let color = pick(sampleX, sampleY)
+			placeMarker(markerPos.x,markerPos.y,color)
+			
+		}
+	} else {
 
-		var swatch = document.createElement('div')
-		swatch.classList.add('swatch')
-		swatch.style.background = color
-		swatch.innerText = color
-		swatches.appendChild(swatch)
-		
+		let markerPos = imageCoordToDocCoord(sampleLine.start.x,sampleLine.start.y,sampleImage)
+		let color = pick(sampleLine.start.x, sampleLine.start.y)
+		placeMarker(markerPos.x,markerPos.y,color)
 	}
 }
 
+function placeMarker(x,y,color){
+
+	var marker = document.createElement('div')
+	marker.classList.add('marker')
+	marker.style.left = `${x - 5}px`
+	marker.style.top = `${y - 15}px`
+	marker.style.background = color
+	sampleLocations.appendChild(marker)
+
+	var swatch = document.createElement('div')
+	swatch.classList.add('swatch')
+	swatch.style.background = color
+	swatch.innerText = color
+	swatches.appendChild(swatch)
+}
+
+function clearUI(){
+	sampleLocations.innerHTML = ""
+	swatches.innerHTML = ""
+}
