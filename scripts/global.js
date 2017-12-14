@@ -15,15 +15,15 @@ function clickToImageCoord(e,img){
 	let r = img.getClientRects()[0]
 	let x = ((e.clientX - r.left) / r.width) * img.naturalWidth
 	let y = ((e.clientY - r.top) / r.height) * img.naturalHeight
-	x = Math.floor(x) + window.scrollX
-	y = Math.floor(y) + window.scrollY
+	x = Math.floor(x)
+	y = Math.floor(y)
 	return { x,y }
 }
 
 function imageCoordToDocCoord(x,y,img){
 	let r = img.getClientRects()[0]
-	x = ((x / img.naturalWidth) * r.width) + r.left
-	y = ((y / img.naturalHeight) * r.height) + r.top
+	x = ((x / img.naturalWidth) * r.width) + r.left + window.scrollX
+	y = ((y / img.naturalHeight) * r.height) + r.top + window.scrollY
 	return { x,y }
 }
 
