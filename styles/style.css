@@ -3,6 +3,9 @@ html, body {
 	margin: 0;
 	text-align: center;
 }
+* {
+	user-select: none;  
+}
 #sample {
 	min-width:100px;
 	min-height:100px;

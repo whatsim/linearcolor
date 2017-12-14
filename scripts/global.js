@@ -104,7 +104,6 @@ function doSample(numSamples){
 }
 
 function placeMarker(x,y,color){
-
 	var marker = document.createElement('div')
 	marker.classList.add('marker')
 	marker.style.left = `${x - 5}px`
