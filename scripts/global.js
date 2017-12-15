@@ -46,7 +46,7 @@ sampleImage.addEventListener('mouseup',function(e){
 function setEndAndSample(e){
 	sampleLine.end = clickToImageCoord(e,sampleImage)
 	let dist = Math.sqrt(Math.pow(sampleLine.start.x - sampleLine.end.x,2) + Math.pow(sampleLine.start.y - sampleLine.end.y,2))
-	let sampleSize = Math.ceil(dist/100)
+	let sampleSize = Math.ceil((dist/sampleImage.naturalWidth) * sampleImage.clientWidth / 75)
 	doSample(sampleSize)
 }
 
