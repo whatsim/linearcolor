@@ -27,15 +27,29 @@ function imageCoordToDocCoord(x,y,img){
 	return { x,y }
 }
 
+let isDown = false
+
 sampleImage.addEventListener('mousedown',function(e){
 	sampleLine.start = clickToImageCoord(e,sampleImage)
+	isDown = true
+})
+sampleImage.addEventListener('mousemove',function(e){
+	if(isDown){
+		setEndAndSample(e)
+	}
 })
 sampleImage.addEventListener('mouseup',function(e){
+	setEndAndSample(e)
+	isDown = false
+})
+
+function setEndAndSample(e){
 	sampleLine.end = clickToImageCoord(e,sampleImage)
 	let dist = Math.sqrt(Math.pow(sampleLine.start.x - sampleLine.end.x,2) + Math.pow(sampleLine.start.y - sampleLine.end.y,2))
 	let sampleSize = Math.ceil(dist/100)
 	doSample(sampleSize)
-})
+}
+
 
 sampleImage.addEventListener('load',function(e){
 	sampleCanvas.width = sampleImage.naturalWidth
